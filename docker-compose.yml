@@ -1,0 +1,79 @@
+version: '3.0'
+
+services:
+  composer:
+    image: composer
+    command: update
+    volumes:
+      - ./wordpress:/app
+
+  mysql:
+    image: mysql:8.0
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: madwell
+      MYSQL_USER: madwell
+      MYSQL_PASSWORD: madwell
+    volumes:
+      -  ./mysql:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8181:80
+
+  wordpress:
+    ### credentials: madwell / madwell
+
+    ### for multiple menus, add lines below to theme's function.php
+    
+    # add_action( 'init', 'custom_menus' );
+    # function custom_menus() {
+    #     register_nav_menus(
+    #         array(
+    #             'additional-menu' => __( 'Additional Menu' )
+    #         )
+    #     );
+    # }
+
+    ### how to update upload_max_filesize
+    ## via terminal: 
+    # docker container exec -it [CONTAINER ID] bash -c "echo 'php_value upload_max_filesize 256M' > '/var/www/html/.htaccess'"
+    # or
+    ## via editing file: add lines below to .htaccess file
+    # ...
+    # END WordPress
+    # php_value upload_max_filesize 256M
+    # php_value post_max_size 256M
+    # php_value max_execution_time 300
+    # php_value max_input_time 300
+
+    depends_on:
+      - mysql
+      - composer
+    image: wordpress:latest
+    ports:
+      - "8888:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_USER: madwell
+      WORDPRESS_DB_PASSWORD: madwell
+      WORDPRESS_DB_NAME: madwell
+    volumes:
+      - ./wordpress:/var/www/html
+
+volumes:
+  mysql_data: {}
+
+  
