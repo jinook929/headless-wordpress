@@ -1,6 +1,7 @@
 # Ignore everything
 *
 # Not these directories
+!etc/
 
 # Not these files
 !docker-compose.yml
