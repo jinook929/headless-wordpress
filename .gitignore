@@ -1,0 +1,9 @@
+# Ignore everything
+*
+# Not these directories
+
+# Not these files
+!docker-compose.yml
+!wordpress/composer.json
+!README.md
+!.gitignore

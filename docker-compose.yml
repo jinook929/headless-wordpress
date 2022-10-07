@@ -1,5 +1,4 @@
 version: '3.0'
-# execute `docker compose up` in terminal
 
 services:
   composer:
@@ -22,8 +21,6 @@ services:
       -  ./mysql:/var/lib/mysql
 
   phpmyadmin:
-    ### go to localhost:8181, then import db sql file (e.g. madwell.sql) file from team/dev/prod
-
     image: phpmyadmin/phpmyadmin
     depends_on:
       - mysql
@@ -35,27 +32,7 @@ services:
     ports:
       - 8181:80
 
-  wordpress: # credentials: madwell / madwell
-    ### go to localhost:8888/wp-admin
-
-    ### choose "Twenty Twenty-One" theme for multiple menus
-
-    ### set Menu locations: Primary -> Header, Secondary -> Footer
-
-    ### save Permalinks setting in Settings, preferably "Post name"
-
-    ### install plugins (listed in `/wordpress/composer.json` file)
-    ## use `composer update` or, in case that doesn't work, install them manually
-
-    ### how to update upload_max_filesize (when uploading zip file is too big)
-    ## via editing `.htaccess` file: add lines below to the top or bottom
-    # php_value upload_max_filesize 256M
-    ## or ##
-    ## via terminal (find docker container id by `docker ps`, then below...): 
-    # docker container exec -it [CONTAINER ID] bash -c "echo 'php_value upload_max_filesize 256M' > '/var/www/html/.htaccess'"
-
-    ### copy & paste `/wp-content/uploads` folder from team/dev/prod
-
+  wordpress:
     depends_on:
       - mysql
       - composer
